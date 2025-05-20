@@ -5,10 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\PaymentController as UserPaymentController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Middleware\CheckAdmin;
+use App\Http\Middleware\RedirectIfAdminUnauthenticated;
 
 Route::get('/', [UserPaymentController::class, 'index'])->name('admin.payment.index');
 Route::post('/get-code', [UserPaymentController::class, 'generateUpiQr'])->name('user.payment.generateUpiQr');
-
 Route::get('/admin/payment', [AdminPaymentController::class, 'index'])->name('admin.payment.index');
 
 // Route::get('/', function () {
@@ -21,7 +21,10 @@ Route::group(['prefix' => 'admin'], function (){
 
 });
 
-Route::group(['middleware' => [ CheckAdmin::class], 'prefix' => 'admin'], function () {
+Route::group([
+    'middleware' => [RedirectIfAdminUnauthenticated::class, CheckAdmin::class],
+    'prefix' => 'admin'
+], function () {
     Route::get('dashboard', [App\Http\Controllers\Admin\LoginController::class, 'index'])->name('admin.dashboard');
 });
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';
