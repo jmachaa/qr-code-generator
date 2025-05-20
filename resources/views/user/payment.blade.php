@@ -106,17 +106,16 @@
         <div class="content">
             <div class="container">
                 <div class="row">
-                            <div class="col-md-6">
-                                <img src="{{ asset('img/donation.avif') }}" alt="donation image"
-                                    class="img-fluid">
-                            </div>
-                            <div class="col-md-6">
-                                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sapiente neque, beatae, laborum
-                                    corrupti assumenda nihil, qui reprehenderit accusamus quis quibusdam molestias labore
-                                    eaque porro. Natus ab quae molestiae laborum, assumenda beatae illo autem sit reiciendis
-                                    odio nesciunt sint. Corrupti, reprehenderit!</p>
-                            </div>
+                    <div class="col-md-6">
+                        <img src="{{ asset('img/donation.avif') }}" alt="donation image" class="img-fluid">
                     </div>
+                    <div class="col-md-6">
+                        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sapiente neque, beatae, laborum
+                            corrupti assumenda nihil, qui reprehenderit accusamus quis quibusdam molestias labore
+                            eaque porro. Natus ab quae molestiae laborum, assumenda beatae illo autem sit reiciendis
+                            odio nesciunt sint. Corrupti, reprehenderit!</p>
+                    </div>
+                </div>
                 <form id="paymentForm" class="payment-form">
                     @csrf
                     <div class="row ">
@@ -248,32 +247,42 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-4 donation-box">
-                            <h6 class="fw-bold"> UPIID@bankname</h6>
-                            <img src="{{ asset('img/qr.png') }}" alt="donation image" class="img-fluid"
-                                style="width: 50%; height: auto;">
-                            <p>Scan the QR using any UPI App</p>
-                        </div>
+
                         <div class="col-md-4 text-center">
-                            <label style="display: flex;justify-content: center;" class="form-label">Transaction Id<span
+                            <label style="display: flex;justify-content: center;" class="form-label">Amount<span
                                     class="mandatory">*</span></label>
-                            <input type="text" name="transaction_id" id="transaction_id" class="form-control custom-input">
+                            <input type="text" name="amount" id="amount" class="form-control custom-input">
                             <span class="text-danger"></span>
                             @error('transaction_id')
                                 <span class="text-danger"></span>
                             @enderror
-                            <button type="button" id="payButton" class="btn btn-primary">Submit</button>
+                            <button type="button" id="generateQR" class="btn btn-primary">Submit</button>
                         </div>
-                    </div>
-                    <div class="row" style="display: flex;justify-content: center;">
+<div class="col-md-4 donation-box">
+                            <h6 class="fw-bold"> UPIID@bankname</h6>
 
+                        </div>
+                    <div  class="col-md-4 text-center">
+                        <label style="display: flex;justify-content: center;" class="form-label">Transaction Id<span
+                                class="mandatory">*</span></label>
+                        <input type="text" name="transaction_id" id="transaction_id" class="form-control custom-input">
+                        <span class="text-danger"></span>
+                        @error('transaction_id')
+                            <span class="text-danger"></span>
+                        @enderror
+                        <button type="button" id="payButton" class="btn btn-primary">Submit</button>
                     </div>
-                    <div class="row" style="display: flex;justify-content: center;">
-
                     </div>
-                </form>
             </div>
+            <div class="row" style="display: flex;justify-content: center;">
+
+            </div>
+            <div class="row" style="display: flex;justify-content: center;">
+
+            </div>
+            </form>
         </div>
+    </div>
     </div>
     <!-- Payment Success Modal -->
     <div class="modal fade" id="paymentSuccessModal" tabindex="-1" aria-labelledby="paymentSuccessModalLabel"
@@ -299,4 +308,33 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$('#generateQR').click(function () {
+    let amount = $('#amount').val();
+
+    $.ajax({
+        url: '{{ route('user.payment.generateUpiQr') }}',
+        method: 'POST',
+        data: {
+            amount: amount,
+            _token: '{{ csrf_token() }}'
+        },
+        xhrFields: {
+            responseType: 'blob' // Expect binary (image) response
+        },
+        success: function (data) {
+            let url = window.URL || window.webkitURL;
+            let src = url.createObjectURL(data);
+            $('#qrImage').attr('src', src);
+        },
+        error: function (err) {
+            alert('Failed to generate QR. Check input or try again.');
+            console.error(err);
+        }
+    });
+});
+</script>
 @endsection
