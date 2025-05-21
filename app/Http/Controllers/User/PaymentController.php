@@ -99,7 +99,21 @@ class PaymentController extends Controller
         $payment_detail->payment_status = (string)$payment_status;
         $payment_detail->save();
         return response()->json([
-            'message' => 'Payment details saved successfully'
+            'message' => 'Payment details saved successfully',
+            'id' => $payment_detail->id
         ]);
     }
+
+    public function updateTransaction(Request $request, $id)
+    {
+            $transaction = PaymentDetail::find($id);
+            if (!$transaction) {
+                return response()->json(['error' => 'Transaction not found'], 404);
+            }   
+            $transaction->transaction_id = $request->transaction_id;
+            $transaction->amount = (float)$request->amount;
+            $transaction->update();
+            return response()->json(['message' => 'Payment details saved successfully']);
+    }
+
 }

@@ -377,6 +377,7 @@
     @section('script')
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
+            let id = '';
             $(document).ready(function () {
                 fetch_countries_list();
                 fetch_diocese_list()
@@ -471,6 +472,48 @@
                     }
                 });
             }
+            $('#payButton').click(function () {
+                let transaction_id = $('#transaction_id').val();
+
+                $('#transaction_id').next('.text-danger').text('');
+
+                if (!transaction_id) {
+                    $('#transaction_id').next('.text-danger').text('Transaction ID is required');
+                    return false;
+                }
+
+                $.ajax({
+                    url: "{{ route('user.payment.verify') }}",
+                    method: 'POST',
+                    data: {
+                        id            : id,
+                        transaction_id: transaction_id,
+                        _token: $('input[name="_token"]').val()
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // Close QR modal
+                            $('#qrModal').modal('hide');
+
+                            // Show success modal
+                            const successModal = new bootstrap.Modal(document.getElementById('paymentSuccessModal'));
+                            successModal.show();
+                        } else {
+                            $('#transaction_id').next('.text-danger').text('Invalid transaction ID');
+                        }
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+                            if (errors.transaction_id) {
+                                $('#transaction_id').next('.text-danger').text(errors.transaction_id[0]);
+                            }
+                        } else {
+                            alert('An error occurred. Please try again.');
+                        }
+                    }
+                });
+            });  
         </script>
         <script>
             $('#generateQR').click(function () {
@@ -502,7 +545,7 @@
                     }
                 });
             });
-       
+
             // Add validation rules 
 
             function FormValidation() {
@@ -619,6 +662,7 @@
                             // Show success message or redirect
                             const modal = new bootstrap.Modal(document.getElementById('paymentSuccessModal'));
                             modal.show();
+                            id = response.id;
                         } else {
                             // Show error message
                             alert('Payment submission failed. Please try again.');
@@ -637,7 +681,7 @@
                     }
                 });
             }
-            
+
 
         </script>
     @endsection
