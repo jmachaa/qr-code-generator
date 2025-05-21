@@ -12,6 +12,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Favicon icon -->
     <link rel="icon" href="{{asset('admin/images/faviconstob1.ico')}}" type="image/x-icon">
+<!-- Font Awesome 6 Free CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
     <title>@yield('title')</title>
     <!-- Custom CSS -->
     <link href="{{asset('admin/css/style.css')}}" rel="stylesheet" type="text/css" media="all"/>
@@ -27,13 +30,14 @@
 <body>
 
  @if(Auth::guard('admin')->check())
-   {{-- @include('admin.header.header')
-   @include('admin.sidebar.sidebar')
+   @include('admin.header.header')
+   {{-- @include('admin.sidebar.sidebar') --}}
    @yield('content')
-   @include('admin.footer.footer') --}}
+   @include('admin.footer.footer')
 
  @else
   @yield('login')
+
  @endif
 
 

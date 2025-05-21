@@ -81,8 +81,7 @@ public function login(Request $request)
 
 public function index()
     {
-
-        return view('admin.dashboard');
+       return view('admin.dashboard');
     }
 
     public function logout(Request $request)
