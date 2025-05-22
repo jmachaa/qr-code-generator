@@ -31,13 +31,8 @@ table tr{
               <th onclick="sortTable(5)">{{ __('Date of Birth') }} <span class="sortTableIcon"></span></th>
               <th onclick="sortTable(6)">{{ __('Amount') }} <span class="sortTableIcon"></span></th>
               <th onclick="sortTable(7)">{{ __('status of Payment') }} <span class="sortTableIcon"></span></th>
-              <th onclick="sortTable(8)">{{ __('Order Id') }} <span class="sortTableIcon"></span></th>
               <th onclick="sortTable(9)">{{ __('Transaction Id') }} <span class="sortTableIcon"></span></th>
-              <th onclick="sortTable(10)">{{ __('Mode of Payment') }} <span class="sortTableIcon"></span></th>
-              {{-- <th onclick="sortTable(11)">{{ __('Payment Details') }} <span class="sortTableIcon"></span></th> --}}
               <th onclick="sortTable(12)">{{ __('Date') }} <span class="sortTableIcon"></span></th>
-
-
             </tr>
         </thead>
         <tbody>
@@ -55,9 +50,7 @@ table tr{
               <td>{{$value->dob}}</td>
               <td>{{$value->amount}}</td>
               <td>{{$value->payment_status}}</td>
-              <td>{{$value->order_id}}</td>
               <td>{{$value->transaction_id}}</td>
-              <td>{{$value->payment_mode}}</td>
               {{-- <td>{{$value->response == null ? '' : $value->response}}</td> --}}
               <td>{{$value->created_at}}</td>
 

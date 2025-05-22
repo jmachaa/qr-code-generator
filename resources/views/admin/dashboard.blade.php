@@ -37,7 +37,7 @@
                     <div class="box text-left">
                         <h1 class="font-light bx-icon"><i class="fas fa-church m-r-3 m-l-3"></i></h1>
                         <h3 class="count"></h3>
-                        <h6 class="">Diocese Master</h6>
+                        <h6 class="">Diocese Management</h6>
                     </div>
                     </a>
                 </div>
@@ -50,7 +50,7 @@
                     <div class="box text-left">
                         <h1 class="font-light bx-icon"><i class="fa fa-cross m-r-3 m-l-3"></i></h1>
                         <h3 class="count"></h3>
-                        <h6 class="">Parish Master</h6>
+                        <h6 class="">Parish Management</h6>
                     </div>
                     </a>
                 </div>

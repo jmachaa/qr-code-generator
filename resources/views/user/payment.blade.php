@@ -125,10 +125,10 @@
                                 <select class="form-control custom-input" aria-label="Default select example"
                                     name="selection" id="selection">
                                     <option value="" disabled selected>Select</option>
-                                    <option value="individual">Individual</option>
-                                    <option value="1">Institution</option>
-                                    <option value="2">Diocese</option>
-                                    <option value="3">Parish</option>
+                                    <option value="1">Individual</option>
+                                    <option value="2">Institution</option>
+                                    <option value="3">Diocese</option>
+                                    <option value="4">Parish</option>
                                 </select>
                                 <small class="text-danger"></small>
 
@@ -352,7 +352,7 @@
         <!-- Payment Success Modal -->
         <div class="modal fade" id="paymentSuccessModal" tabindex="-1" aria-labelledby="paymentSuccessModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog">
                 <div class="modal-content text-center">
                     <div class="modal-header border-0">
                         <h5 class="modal-title w-100" id="paymentSuccessModalLabel">Payment Status</h5>
@@ -377,7 +377,6 @@
     @section('script')
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-            let id = '';
             $(document).ready(function () {
                 fetch_countries_list();
                 fetch_diocese_list()
@@ -393,17 +392,26 @@
                 $('#selection').on('change', function () {
                     let selection = $(this).val();
 
-                    if (selection === 'individual') {
+                    if (selection === '1') {
                         // Show first name and last name fields
                         $('#fisrt_name').closest('.col-12').show();
                         $('#last_name').closest('.col-12').show();
                         $('#fisrt_name').closest('.col-12').find('label').text('First Name');
                         $('#last_name').closest('.col-12').find('label').text('Last Name');
-                    } else {
+                        $('#dob').closest('.col-12').show();
+                  } else {
                         // Show only name field
                         $('#fisrt_name').closest('.col-12').show();
                         $('#last_name').closest('.col-12').hide();
                         $('#fisrt_name').closest('.col-12').find('label').text('Name');
+                    }
+                    if(selection == '2' || selection == '3' || selection == '4'){
+                        $('#dob').closest('.col-12').hide();
+                    }
+                    if(selection == '3'){
+                        $('#parish_id').closest('.col-12').hide();
+                    }else{
+                        $('#parish_id').closest('.col-12').show();
                     }
                 });
             });
@@ -446,7 +454,7 @@
                         var dioceseSelect = $('#diocese_id');
                         dioceseSelect.empty().append('<option value="" disabled selected>Select Diocese</option>');
 
-                        $.each(data, function (key, diocese) {
+                        $.each(data.sort((a, b) => a.name.localeCompare(b.name)), function (key, diocese) {
                             dioceseSelect.append('<option value="' + diocese.id + '">' + diocese.name + '</option>');
                         });
                     },
@@ -463,7 +471,7 @@
                     success: function (data) {
                         let parishSelect = $('#parish_id');
                         parishSelect.empty().append('<option value="" disabled selected>Select Parish</option>');
-                        $.each(data, function (index, parish) {
+                        $.each(data.sort((a, b) => a.parish_name.localeCompare(b.parish_name)), function (index, parish) {
                             parishSelect.append('<option value="' + parish.id + '">' + parish.parish_name + '</option>');
                         });
                     },
@@ -513,7 +521,7 @@
                         }
                     }
                 });
-            });  
+            });
         </script>
         <script>
             $('#generateQR').click(function () {
@@ -540,13 +548,13 @@
 
                     },
                     error: function (err) {
-                        alert('Failed to generate QR. Check input or try again.');
+                        // alert('Failed to generate QR. Check input or try again.');
                         console.error(err);
                     }
                 });
             });
 
-            // Add validation rules 
+            // Add validation rules
 
             function FormValidation() {
                 let selection = $('#selection').val();
@@ -582,13 +590,17 @@
                     $('#fisrt_name').next('.text-danger').text('First name is required');
                     isValid = false;
                 }
-                if (selection == 'individual' && !last_name) {
+                if (selection == '1' && !last_name) {
                     $('#last_name').next('.text-danger').text('Last name is required');
                     isValid = false;
                 }
 
                 if (!email) {
                     $('#email').next('.text-danger').text('Email is required');
+                    isValid = false;
+                }
+                if (!dob && selection == '1') {
+                    $('#dob').next('.text-danger').text('date of birth is required');
                     isValid = false;
                 }
 
@@ -612,7 +624,7 @@
                     isValid = false;
                 }
 
-                if (!parish_id) {
+                if (!parish_id && selection != '3') {
                     $('#parish_id').next('.text-danger').text('Parish is required');
                     isValid = false;
                 }
@@ -659,9 +671,6 @@
                     data: formData,
                     success: function (response) {
                         if (response.success) {
-                            // Show success message or redirect
-                            const modal = new bootstrap.Modal(document.getElementById('paymentSuccessModal'));
-                            modal.show();
                             id = response.id;
                         } else {
                             // Show error message

@@ -31,7 +31,7 @@
 
  @if(Auth::guard('admin')->check())
    @include('admin.header.header')
-   {{-- @include('admin.sidebar.sidebar') --}}
+   @include('admin.sidebar.sidebar')
    @yield('content')
    @include('admin.footer.footer')
 

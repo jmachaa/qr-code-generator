@@ -14,7 +14,7 @@ Route::get('/fetch_countries_list', [UserPaymentController::class, 'fetch_countr
 Route::post('/get-code', [UserPaymentController::class, 'generateUpiQr'])->name('user.payment.generateUpiQr');
 Route::get('/admin/payment', [AdminPaymentController::class, 'index'])->name('admin.payment.index');
 Route::post('user/payment/submit', [UserPaymentController::class,'submitPayment'])->name('user.payment.submit');
-Route::post('user/payment/verify', [UserPaymentController::class,'updateTransaction'])->name('user.payment.verify');    
+Route::post('user/payment/verify', [UserPaymentController::class,'updateTransaction'])->name('user.payment.verify');
 // Route::get('/', function () {
 //     return view('welcome');
 // });
@@ -64,5 +64,9 @@ Route::group([
     Route::post('/delete_diocese_file', [App\Http\Controllers\Admin\DioceseController::class, 'delete_file']);
 
     // ----------------------------------Diocese route ends-------------------------------------------------------
+
+//------------------------Export Data------------------------------//
+Route::get('/export_data', [App\Http\Controllers\Admin\PaymentController::class, 'export_data'])->name('user.payment.export');
+//------------------------Export Data------------------------------//
 });
 

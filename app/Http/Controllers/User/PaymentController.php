@@ -58,13 +58,13 @@ class PaymentController extends Controller
     }
     public function submitPayment(Request $request)
     {
-        
+
         $section_id = (int)$request['selection'] ?? '';
         $country_code = $request['country_code'] ?? '';
         $country_code = $request['country_code'] ?? '';
         $mobile_number_without_country_code = $request['mobile_number_without_country_code'] ?? '';
-        $full_mobile_number = $country_code . $mobile_number_without_country_code;
-        $fisrt_name = $request['fisrt_name'] ?? '';
+        $mobile_number=$request['mobile_number'] ?? '';
+        $fisrt_name = $request['first_name'] ?? '';
         $last_name = $request['last_name'] ?? '';
         $email = $request['email'] ?? '';
         $pan_no = $request['pan'] ?? '';
@@ -83,7 +83,7 @@ class PaymentController extends Controller
         $payment_detail->selection_id = $section_id;
         $payment_detail->first_name = $fisrt_name;
         $payment_detail->last_name = $last_name;
-        $payment_detail->mobile_no = $full_mobile_number;
+        $payment_detail->mobile_no = $country_code.$mobile_number;
         $payment_detail->email = $email;
         $payment_detail->pan = $pan_no;
         $payment_detail->dob = date('Y-m-d', strtotime($dob));
@@ -100,20 +100,21 @@ class PaymentController extends Controller
         $payment_detail->save();
         return response()->json([
             'message' => 'Payment details saved successfully',
+            'success' => true,
             'id' => $payment_detail->id
         ]);
     }
 
-    public function updateTransaction(Request $request, $id)
+    public function updateTransaction(Request $request)
     {
-            $transaction = PaymentDetail::find($id);
+            $transaction = PaymentDetail::find($request->id);
             if (!$transaction) {
                 return response()->json(['error' => 'Transaction not found'], 404);
-            }   
+            }
             $transaction->transaction_id = $request->transaction_id;
-            $transaction->amount = (float)$request->amount;
+            $transaction->payment_status ='complete';
             $transaction->update();
-            return response()->json(['message' => 'Payment details saved successfully']);
+            return response()->json(['message' => 'Payment details saved successfully', 'success' => true]);
     }
 
 }

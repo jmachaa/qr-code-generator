@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\models\PaymentDetail;
+use App\Exports\PaymentDetailExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PaymentController extends Controller
 {
@@ -81,8 +83,8 @@ class PaymentController extends Controller
         public function export_data()
         {
         $filePath = storage_path('app/public/Payment-details.xlsx');
-        Excel::store(new PaymentDetailExport, 'public/Payment-details.xlsx');
-        return response()->download($filePath);
+        return Excel::download(new PaymentDetailExport(), 'Payment-details.xlsx');
+        // return response()->download(file: $filePath);
 
         }
 }
